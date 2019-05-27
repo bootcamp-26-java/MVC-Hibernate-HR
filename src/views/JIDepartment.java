@@ -93,12 +93,12 @@ public class JIDepartment extends javax.swing.JInternalFrame {
             row[1] = department.get(i).getId();
             row[2] = department.get(i).getName();
             if (department.get(i).getManager() == null) {
-                row[3] = " ";
+                row[3] = "";
             } else {
                 row[3] = department.get(i).getManager().getLastName();
             }
             if (department.get(i).getLocation() == null) {
-                row[4] = " ";
+                row[4] = "";
             } else {
                 row[4] = department.get(i).getLocation().getCity();
             }
