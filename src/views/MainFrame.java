@@ -131,6 +131,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void countryItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countryItemActionPerformed
         // TODO add your handling code here:
+        JIICountry CountryView = new JIICountry();
+        this.jDesktopPane1.add(CountryView);
+        CountryView.show();
     }//GEN-LAST:event_countryItemActionPerformed
 
     private void locationItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationItemActionPerformed

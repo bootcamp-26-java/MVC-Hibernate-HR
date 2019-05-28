@@ -5,6 +5,7 @@
  */
 package tools;
 
+import controllers.CountryController;
 import controllers.DepartmentController;
 import controllers.EmployeeController;
 import daos.GeneralDAO;
@@ -188,7 +189,7 @@ public class OHibernate {
 //            System.out.println(employee.getHireDate());
 //            System.out.println(employee.getEmail());
 //        }
-//        EmployeeController employeeController = new EmployeeController(factory);
+        CountryController countryController = new CountryController(factory);
         //test getall controller
 //        for (Employee employee : employeeController.getAll()) {
 //            System.out.println(employee.getFirstName());
@@ -200,7 +201,8 @@ public class OHibernate {
         //test insert
 //        Employee employee = new Employee(900, "gianny", "luigi", "a@mail.com", "098970", new Date("12/01/2019"), new BigDecimal(23), new BigDecimal(0.2), new Department(new Short("90")), new Employee(100), new Job("AD_PRES"));
 //        System.out.println(edao.saveOrDelete(employee, false));
-//        System.out.println(employeeController.save("900", "gian", "luigi", "a@mail.com", "098970", "12/01/2019", "23", "0.2", "90", "100", "AD_PRES"));
+//        System.out.println(countryController.save("AW", "AWOAKKWKA", "3"));
+        System.out.println(countryController.delete("AW"));
 //            
         //test update  
 //        Employee employee1 = new Employee(900, "gianny", "luigi", "a@mail.com", "098970", new Date("12/01/2019"), new BigDecimal(23), new BigDecimal(0.2), new Department(new Short("90")), new Employee(100), new Job("AD_PRES"));

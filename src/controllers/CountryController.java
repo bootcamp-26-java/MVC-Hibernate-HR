@@ -9,6 +9,8 @@ import icontrollers.ICountryController;
 import java.util.List;
 import models.Country;
 import idaos.IGeneralDAO;
+import java.math.BigDecimal;
+import models.Region;
 import org.hibernate.SessionFactory;
 
 /**
@@ -40,20 +42,26 @@ public CountryController(SessionFactory factory) {
 
     @Override
     public String save(String id, String name, String region) {
-        String result = "data gagal disimpan";
-        if(cdao.saveOrDelete(new Country(), true)) {
+        String result = "";
+        Country country = new Country(id, name, new Region(new BigDecimal(region)));
+        if(cdao.saveOrDelete(country, false)) {
             result = "data berhasil disimpan";
+        } else {
+            result="failed";
         }
         return result;
     }
 
     @Override
     public String delete(String id) {
-        String result = "data gagal disimpan";
-        if (cdao.saveOrDelete(new Country(), false)) {
-        result = "data berhasil disimpan";
-    }
-    return result;
+        String result = "";
+        Country country = new Country(id);
+        if (cdao.saveOrDelete(country, true)) {
+        result = "Sukses";
+    } else {
+         result = "fail";
+        }
+        return result;
     }
     
 }

@@ -6,6 +6,7 @@
 package views;
 
 import controllers.CountryController;
+import controllers.RegionController;
 import icontrollers.ICountryController;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,36 +22,41 @@ import tools.HibernateUtil;
  *
  * @author erik
  */
-public class CountryView extends javax.swing.JFrame {
-    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+public class JIICountry extends javax.swing.JInternalFrame {
+private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private Session session = null;
     ICountryController icc = new CountryController(sessionFactory);
     
     /**
      * Creates new form CountryView
      */
-    public CountryView() {
+    public JIICountry() {
         initComponents();
         showTableCountry();
-        
+        region();
     }
     
      public void resetTextCountry(){
         txt_Id.setText("");
-        Txt_Country.setText("");
-        txt_search.setText("");
-        Txt_Region.setText("");
+        Txt_Country.setText("");    
+        txt_Id.setEditable(true);
         btn_insert.setEnabled(true);
 //        cmbCountryID.setText("");
         
     }
+     
+      private void region() {
+          for (Region cnt : new RegionController(sessionFactory).getAll()) {          
+                cmb_Region.addItem(cnt.getId()+ "-" + cnt.getName());
+          }    
+        
+      }
      
      public void showTableCountry(){
         DefaultTableModel model = (DefaultTableModel)table_Country.getModel();        
         Object[] row = new Object[4];
         List<Country> country = new ArrayList<>();
         country = icc.getAll();
-        
         for (int i = 0; i < country.size(); i++) {
             row[0] = i +1;
             row[1]=country.get(i).getId();
@@ -65,19 +71,19 @@ public class CountryView extends javax.swing.JFrame {
         }
     }
     
-    public void showTableCountry(String s){
+    public void showTableCountry(String show){
         DefaultTableModel model = (DefaultTableModel)table_Country.getModel();        
         Object[] row = new Object[4];
-        List<Country> country = new ArrayList<>();
-        country = icc.getAll();
-        if (s.isEmpty()) {
-            country = icc.getAll();
+        List<Country> countrys = new ArrayList<>();
+        countrys = icc.search(show);
+        if (show.isEmpty()) {
+            countrys = icc.getAll();
         }
-        for (int i = 0; i < country.size(); i++) {
-            row[0] = i ++;
-            row[1]=country.get(i).getId();
-            row[2]=country.get(i).getName();
-            row[3]=country.get(i).getRegion().getId(); 
+        for (int i = 0; i < countrys.size(); i++) {
+            row[0] = i +1;
+            row[1]=countrys.get(i).getId();
+            row[2]=countrys.get(i).getName();
+            row[3]=countrys.get(i).getRegion().getName(); 
 //                    + " - " + country.get(i).getRegion().getId()
 //                    + country.get(i).getRegion().getName();
 //                    .getRegionId()
@@ -86,7 +92,9 @@ public class CountryView extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
-    
+    /**
+     * erik
+     */
     public void updateTableCountry(){       
         DefaultTableModel model = (DefaultTableModel)table_Country.getModel();
         model.setRowCount(0);
@@ -101,8 +109,6 @@ public class CountryView extends javax.swing.JFrame {
         }
         showTableCountry(s);
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,6 +120,12 @@ public class CountryView extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        btn_delete = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txt_search = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table_Country = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -121,18 +133,51 @@ public class CountryView extends javax.swing.JFrame {
         Txt_Country = new javax.swing.JTextField();
         btn_insert = new javax.swing.JButton();
         btn_update = new javax.swing.JButton();
-        btn_delete = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        txt_search = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table_Country = new javax.swing.JTable();
-        Txt_Region = new javax.swing.JTextField();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        cmb_Region = new javax.swing.JComboBox<>();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Country");
+
+        btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Clear");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Search");
+
+        txt_search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_searchActionPerformed(evt);
+            }
+        });
+        txt_search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_searchKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_searchKeyTyped(evt);
+            }
+        });
+
+        table_Country.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "No", "Id", "Country_name", "Region_id"
+            }
+        ));
+        table_Country.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_CountryMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_Country);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("ID");
@@ -157,43 +202,12 @@ public class CountryView extends javax.swing.JFrame {
             }
         });
 
-        btn_delete.setText("Delete");
-        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+        cmb_Region.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Region" }));
+        cmb_Region.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_deleteActionPerformed(evt);
+                cmb_RegionActionPerformed(evt);
             }
         });
-
-        jButton4.setText("Clear");
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Search");
-
-        txt_search.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_searchActionPerformed(evt);
-            }
-        });
-        txt_search.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_searchKeyTyped(evt);
-            }
-        });
-
-        table_Country.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "No", "Id", "Country_name", "Region_id"
-            }
-        ));
-        table_Country.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_CountryMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(table_Country);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,117 +216,100 @@ public class CountryView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btn_insert)
-                                .addGap(27, 27, 27)
-                                .addComponent(btn_update)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn_delete)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton4))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(237, 237, 237)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(98, 98, 98)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(86, 86, 86)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txt_Id, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_insert)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel3))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_Id, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                            .addComponent(Txt_Country, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Txt_Region)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 21, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                                        .addGap(26, 26, 26)
+                                        .addComponent(btn_update)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(btn_delete)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton4))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cmb_Region, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(Txt_Country, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE))))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(120, 120, 120))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
                     .addComponent(txt_Id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(Txt_Country, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(Txt_Country, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(Txt_Region, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                    .addComponent(cmb_Region, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_insert)
                     .addComponent(btn_update)
                     .addComponent(btn_delete)
                     .addComponent(jButton4))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(98, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_insertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_insertActionPerformed
-        // TODO add your handling code here:
-        int confirm = JOptionPane.showConfirmDialog(this, "Apakah anda yakin untuk melakukan insert?", "Confirm Insert", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(confirm==JOptionPane.YES_OPTION){
-            JOptionPane.showMessageDialog(null, icc.save(txt_Id.getText(), Txt_Country.getText(), Txt_Region.getText()));
-            updateTableCountry("");
-            resetTextCountry();
-        }
-    }//GEN-LAST:event_btn_insertActionPerformed
-
-    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        // TODO add your handling code here: 
-        int confirm = JOptionPane.showConfirmDialog(this, "apakah anda yakin melakukan update? ", "confirm update ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-        if (confirm == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(null,icc.save(txt_Id.getText(), Txt_Country.getText(), Txt_Region.getText()));
-            updateTableCountry();
-            resetTextCountry();
-        }
-    }//GEN-LAST:event_btn_updateActionPerformed
-
-    private void txt_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_searchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_searchActionPerformed
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
         int confirm = JOptionPane.showConfirmDialog(this, "Apakah anda yakin untuk melakukan delete?", "Confirm Delet", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(confirm==JOptionPane.YES_OPTION){
             JOptionPane.showMessageDialog(null, icc.delete(txt_Id.getText()));
-            updateTableCountry("");
+            updateTableCountry();
             resetTextCountry();
         }
     }//GEN-LAST:event_btn_deleteActionPerformed
 
+    private void txt_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_searchActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txt_searchActionPerformed
+
+    private void txt_searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_searchKeyReleased
+        // TODO add your handling code here:
+        updateTableCountry(txt_search.getText());
+        System.out.println(txt_search.getText());
+    }//GEN-LAST:event_txt_searchKeyReleased
+
     private void txt_searchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_searchKeyTyped
         // TODO add your handling code here:
-        updateTableCountry(txt_Id.getText());
+        updateTableCountry(txt_search.getText());
     }//GEN-LAST:event_txt_searchKeyTyped
 
     private void table_CountryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_CountryMouseClicked
@@ -324,13 +321,39 @@ public class CountryView extends javax.swing.JFrame {
         btn_insert.setEnabled(false);
         txt_Id.setText(model.getValueAt(SelectedRowIndex, 1).toString());
         Txt_Country.setText(model.getValueAt(SelectedRowIndex,2).toString());
-        Txt_Region.setText(model.getValueAt(SelectedRowIndex, 3).toString());
-        
+        cmb_Region.setSelectedItem(model.getValueAt(SelectedRowIndex, 3).toString());
+//        Cmb_Region.setText(model.getValueAt(SelectedRowIndex, 3).toString());
+
     }//GEN-LAST:event_table_CountryMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btn_insertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_insertActionPerformed
+        // TODO add your handling code here:
+        String cntry = cmb_Region.getSelectedItem().toString();
+        cntry = cntry.substring(0, cntry.indexOf("-"));
+        int confirm = JOptionPane.showConfirmDialog(this, "Apakah anda yakin untuk melakukan insert?", "Confirm Insert", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(confirm==JOptionPane.YES_OPTION){
+            JOptionPane.showMessageDialog(null, icc.save(txt_Id.getText(), Txt_Country.getText(), cntry));
+            updateTableCountry();
+            resetTextCountry();
+        }
+    }//GEN-LAST:event_btn_insertActionPerformed
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        // TODO add your handling code here:
+        String cntry = cmb_Region.getSelectedItem().toString();
+        cntry = cntry.substring(0, cntry.indexOf("-"));
+        int confirm = JOptionPane.showConfirmDialog(this, "apakah anda yakin melakukan update? ", "confirm update ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(null,icc.save(txt_Id.getText(), Txt_Country.getText(), cntry));
+            updateTableCountry();
+            resetTextCountry();
+        }
+    }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void cmb_RegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_RegionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmb_RegionActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -345,13 +368,13 @@ public class CountryView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CountryView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JIICountry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CountryView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JIICountry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CountryView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JIICountry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CountryView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JIICountry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -361,17 +384,17 @@ public class CountryView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CountryView().setVisible(true);
+                new JIICountry().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Txt_Country;
-    private javax.swing.JTextField Txt_Region;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_insert;
     private javax.swing.JButton btn_update;
+    private javax.swing.JComboBox<String> cmb_Region;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -383,4 +406,6 @@ public class CountryView extends javax.swing.JFrame {
     private javax.swing.JTextField txt_Id;
     private javax.swing.JTextField txt_search;
     // End of variables declaration//GEN-END:variables
+
+   
 }

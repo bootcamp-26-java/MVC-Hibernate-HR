@@ -40,7 +40,7 @@ public class GeneralDAO<T> implements IGeneralDAO<T> {
         List<T> objectList = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
-        String hql = "FROM " + t.getClass().getSimpleName();
+        String hql = "FROM " + t.getClass().getSimpleName()+"";
         if (!keyword.equals("")) {
             hql += " WHERE ";
             for (Field field : t.getClass().getDeclaredFields()) {
