@@ -393,8 +393,8 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         txtDepartment_Id.setText(model.getValueAt(SelectRowIndex, 1).toString());
         txtDepartment_Name.setText(model.getValueAt(SelectRowIndex, 2).toString());
 
-//        cmbManager.setSelectedItem(model.getValueAt(SelectRowIndex, 3).toString());
-//        cmbLocation.setSelectedItem(model.getValueAt(SelectRowIndex, 4).toString());
+        cmbManager.setSelectedItem(model.getValueAt(SelectRowIndex, 3).toString());
+        cmbLocation.setSelectedItem(model.getValueAt(SelectRowIndex, 4).toString());
     }//GEN-LAST:event_tableDepartmentMouseClicked
 
     private void txtDepartment_IdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDepartment_IdActionPerformed
