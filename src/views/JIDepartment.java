@@ -300,6 +300,11 @@ public class JIDepartment extends javax.swing.JInternalFrame {
 
         cmbManager.setForeground(new java.awt.Color(102, 102, 102));
         cmbManager.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manager" }));
+        cmbManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbManagerActionPerformed(evt);
+            }
+        });
 
         cmbLocation.setForeground(new java.awt.Color(102, 102, 102));
         cmbLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Location" }));
@@ -468,6 +473,10 @@ public class JIDepartment extends javax.swing.JInternalFrame {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         resetTextDepartment();
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void cmbManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbManagerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbManagerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

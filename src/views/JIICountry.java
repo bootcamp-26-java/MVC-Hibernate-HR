@@ -121,7 +121,7 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
         jLabel1 = new javax.swing.JLabel();
         btn_delete = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btn_clear = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         txt_search = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -145,7 +145,12 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             }
         });
 
-        jButton4.setText("Clear");
+        btn_clear.setText("Clear");
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Search");
@@ -238,7 +243,7 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
                                         .addGap(27, 27, 27)
                                         .addComponent(btn_delete)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton4))
+                                        .addComponent(btn_clear))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -273,7 +278,7 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
                     .addComponent(btn_insert)
                     .addComponent(btn_update)
                     .addComponent(btn_delete)
-                    .addComponent(jButton4))
+                    .addComponent(btn_clear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -354,6 +359,11 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         // TODO add your handling code here:
     }//GEN-LAST:event_cmb_RegionActionPerformed
 
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        // TODO add your handling code here:
+         resetTextCountry();
+    }//GEN-LAST:event_btn_clearActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -391,11 +401,11 @@ private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Txt_Country;
+    private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_insert;
     private javax.swing.JButton btn_update;
     private javax.swing.JComboBox<String> cmb_Region;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
