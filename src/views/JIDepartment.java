@@ -12,6 +12,7 @@ import daos.GeneralDAO;
 import icontrollers.IDepartmentController;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Department;
@@ -38,105 +39,90 @@ public class JIDepartment extends javax.swing.JInternalFrame {
      */
     public JIDepartment() {
         initComponents();
-        showTableDepartment();
-        nomor();
+        showTableDepartment("");
         getManager();
         getLoc();
     }
 
     private void getManager() {
         for (Employee emp : new EmployeeController(factory).getAll()) {
-            if (emp.getManager() == null) {
-                cmbManager.addItem("");
-            } else {
-                cmbManager.addItem(emp.getId() + "-" + emp.getFirstName());
-            }
+            cmbManager.addItem(emp.getId() + " - " + emp.getLastName());
         }
     }
 
     private void getLoc() {
         for (Location loc : new LocationController(factory).getAll()) {
-            if (loc.getCity()== null) {
+            if (loc.getCity() == null) {
                 cmbLocation.addItem("");
             } else {
-                cmbLocation.addItem(loc.getId()+"-"+loc.getCity());
+                cmbLocation.addItem(loc.getId() + " - " + loc.getCity());
             }
         }
-    }
-
-    public Object nomor() {
-        Object[] no = new Object[1];
-        int baris = model.getRowCount();
-        for (int i = 0; i < baris; i++) {
-            String No = String.valueOf(i + 1);
-            model.setValueAt(No + ".", i, 0);
-        }
-        return no;
     }
 
     public void resetTextDepartment() {
         txtDepartment_Id.setText("");
         txtDepartment_Name.setText("");
-//        txtManager_id.setText("");
-//        txtLocation_id.setText("");
         txtDepartment_Id.setEditable(true);
         btnInsertDepartment.setEnabled(true);
     }
 
-    public void showTableDepartment() {
+    public void showTableDepartment(String key) {
         DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
+        model.setRowCount(0);
         Object[] row = new Object[5];
-        List<Department> department = new ArrayList<>();
-        department = idc.getAll();
-        for (int i = 0; i < department.size(); i++) {
+        List<Department> departmentst = new ArrayList<>();
+        if (key == "") {
+            departmentst = idc.getAll();
+        }
+        departmentst = idc.search(key);
+        for (int i = 0; i < departmentst.size(); i++) {
             row[0] = i + 1;
-            row[1] = department.get(i).getId();
-            row[2] = department.get(i).getName();
-            if (department.get(i).getManager() == null) {
+            row[1] = departmentst.get(i).getId();
+            row[2] = departmentst.get(i).getName();
+            if (departmentst.get(i).getManager() == null) {
                 row[3] = "";
             } else {
-                row[3] = department.get(i).getManager().getLastName();
+                row[3] = departmentst.get(i).getManager().getLastName();
             }
-            if (department.get(i).getLocation() == null) {
+            if (departmentst.get(i).getLocation() == null) {
                 row[4] = "";
             } else {
-                row[4] = department.get(i).getLocation().getCity();
+                row[4] = departmentst.get(i).getLocation().getCity();
             }
-
             model.addRow(row);
         }
     }
 
-    public void showTableDepartment(String s) {
-        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
-        Object[] row = new Object[5];
-        List<Department> department = new ArrayList<>();
-        department = idc.search(s);
-        for (int i = 0; i < department.size(); i++) {
-            row[0] = nomor();
-            row[1] = department.get(i).getId();
-            row[2] = department.get(i).getName();
-            row[3] = department.get(i).getManager().getLastName();
-            row[4] = department.get(i).getLocation().getCity();
-            model.addRow(row);
-        }
-    }
-
-    public void updateTableDepartment() {
-        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
-        model.setRowCount(0);
-        showTableDepartment();
-    }
-
-    public void updateTableDepartment(String s) {
-        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
-        model.setRowCount(0);
-        if (s == "") {
-            showTableDepartment();
-        }
-        showTableDepartment(s);
-    }
-
+//    public void showTableDepartment(String s) {
+//        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
+//        Object[] row = new Object[5];
+//        List<Department> department = new ArrayList<>();
+//        department = idc.search(s);
+//        for (int i = 0; i < department.size(); i++) {
+//            row[0] = i+1;
+//            row[1] = department.get(i).getId();
+//            row[2] = department.get(i).getName();
+//            row[3] = department.get(i).getManager().getLastName();
+//            row[4] = department.get(i).getLocation().getCity();
+//            model.addRow(row);
+//        }
+//    }
+//
+//    public void updateTableDepartment() {
+//        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
+//        model.setRowCount(0);
+//        showTableDepartment();
+//    }
+//
+//    public void updateTableDepartment(String s) {
+//        DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
+//        model.setRowCount(0);
+//        if (s == "") {
+//            showTableDepartment();
+//        }
+//        showTableDepartment(s);
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,7 +143,6 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         txtDepartment_Id = new javax.swing.JTextField();
         txtDepartment_Name = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        btnUpdate = new javax.swing.JButton();
         btnInsertDepartment = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
@@ -165,6 +150,11 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         cmbManager = new javax.swing.JComboBox<>();
         cmbLocation = new javax.swing.JComboBox<>();
+
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
 
         txtDepartmentSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -261,19 +251,7 @@ public class JIDepartment extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Name");
 
-        btnUpdate.setText("UPDATE");
-        btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnUpdateMouseClicked(evt);
-            }
-        });
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
-            }
-        });
-
-        btnInsertDepartment.setText("INSERT");
+        btnInsertDepartment.setText("SAVE");
         btnInsertDepartment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertDepartmentActionPerformed(evt);
@@ -299,10 +277,10 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         jLabel6.setText("Location");
 
         cmbManager.setForeground(new java.awt.Color(102, 102, 102));
-        cmbManager.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manager" }));
+        cmbManager.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Choose ---" }));
 
         cmbLocation.setForeground(new java.awt.Color(102, 102, 102));
-        cmbLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Location" }));
+        cmbLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Choose ---" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -310,7 +288,7 @@ public class JIDepartment extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -324,14 +302,16 @@ public class JIDepartment extends javax.swing.JInternalFrame {
                             .addComponent(cmbManager, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbLocation, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnInsertDepartment)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(btnInsertDepartment))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(96, 96, 96)
+                                .addComponent(btnDelete)))
+                        .addGap(31, 31, 31)
                         .addComponent(btnClear)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -355,7 +335,6 @@ public class JIDepartment extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnInsertDepartment)
-                    .addComponent(btnUpdate)
                     .addComponent(btnDelete)
                     .addComponent(btnClear))
                 .addContainerGap())
@@ -375,7 +354,7 @@ public class JIDepartment extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -397,7 +376,7 @@ public class JIDepartment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtDepartmentSearchActionPerformed
 
     private void txtDepartmentSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDepartmentSearchKeyReleased
-        updateTableDepartment(txtDepartmentSearch.getText());
+        showTableDepartment(txtDepartmentSearch.getText());
     }//GEN-LAST:event_txtDepartmentSearchKeyReleased
 
     private void txtDepartmentSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDepartmentSearchKeyTyped
@@ -408,14 +387,13 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         DefaultTableModel model = (DefaultTableModel) tableDepartment.getModel();
         int SelectRowIndex = tableDepartment.getSelectedRow();
 
-        txtDepartment_Id.setEditable(false);
-        btnInsertDepartment.setEnabled(false);
+//
+//        txtDepartment_Id.setEditable(false);
+//        btnInsertDepartment.setEnabled(false);
         txtDepartment_Id.setText(model.getValueAt(SelectRowIndex, 1).toString());
         txtDepartment_Name.setText(model.getValueAt(SelectRowIndex, 2).toString());
-        cmbManager.setSelectedItem(model.getValueAt(SelectRowIndex, 3).toString());
-        cmbLocation.setSelectedItem(model.getValueAt(SelectRowIndex, 4).toString());
-//        txtManager_id.setText(model.getValueAt(SelectRowIndex, 3).toString());
-//        txtLocation_id.setText(model.getValueAt(SelectRowIndex, 4).toString());
+        cmbManager.setSelectedItem(""+model.getValueAt(SelectRowIndex, 3).toString());
+//        cmbLocation.setSelectedItem(model.getValueAt(SelectRowIndex, 4).toString());
     }//GEN-LAST:event_tableDepartmentMouseClicked
 
     private void txtDepartment_IdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDepartment_IdActionPerformed
@@ -426,41 +404,31 @@ public class JIDepartment extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDepartment_NameActionPerformed
 
-    private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
-
-    }//GEN-LAST:event_btnUpdateMouseClicked
-
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        String dprt = cmbManager.getSelectedItem().toString();
-        dprt = dprt.substring(0, dprt.indexOf("-"));
-        String lct = cmbLocation.getSelectedItem().toString();
-        lct = lct.substring(0, lct.indexOf("-"));
-        int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau memperbarui data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (confirm == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(null, idc.save(txtDepartment_Id.getText(), txtDepartment_Name.getText(), dprt, lct));
-            updateTableDepartment();
-            resetTextDepartment();
-        }
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
     private void btnInsertDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertDepartmentActionPerformed
-        String dprt = cmbManager.getSelectedItem().toString();
-        dprt = dprt.substring(0, dprt.indexOf("-"));
-        String lct = cmbLocation.getSelectedItem().toString();
-        lct = lct.substring(0, lct.indexOf("-"));
-        int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau menambah data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (confirm == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(null, idc.save(txtDepartment_Id.getText(), txtDepartment_Name.getText(),  dprt, lct));
-            updateTableDepartment();
-            resetTextDepartment();
+        if (txtDepartment_Id.getText().equals("") || txtDepartment_Name.getText().equals("") || cmbManager.getSelectedItem().equals("--- Choose ---") || cmbLocation.getSelectedItem().equals("--- Choose ---")) {
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong");
+        } else {
+            String dprt = cmbManager.getSelectedItem().toString();
+            dprt = dprt.substring(0, dprt.indexOf(" - "));
+            String lct = cmbLocation.getSelectedItem().toString();
+            lct = lct.substring(0, lct.indexOf(" - "));
+            int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau menyimpan data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (confirm == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, idc.save(txtDepartment_Id.getText(), txtDepartment_Name.getText(), dprt, lct));
+                showTableDepartment("");
+                resetTextDepartment();
+            }
         }
+
+//        int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau menyimpan data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
     }//GEN-LAST:event_btnInsertDepartmentActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau menghapus data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(null, idc.delete(txtDepartment_Id.getText()));
-            updateTableDepartment();
+            showTableDepartment("");
             resetTextDepartment();
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
@@ -474,7 +442,6 @@ public class JIDepartment extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnInsertDepartment;
-    private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cmbLocation;
     private javax.swing.JComboBox<String> cmbManager;
     private javax.swing.JLabel jLabel1;

@@ -40,7 +40,7 @@ public class GeneralDAO<T> implements IGeneralDAO<T> {
         List<T> objectList = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
-        String hql = "FROM " + t.getClass().getSimpleName()+"";
+        String hql = "FROM " + t.getClass().getSimpleName();
         if (!keyword.equals("")) {
             hql += " WHERE ";
             for (Field field : t.getClass().getDeclaredFields()) {
@@ -51,11 +51,7 @@ public class GeneralDAO<T> implements IGeneralDAO<T> {
             hql = hql.substring(0, hql.lastIndexOf("OR"));
         }
         try {
-            Query query = session.createQuery(hql);
-//            query.setParameter("table", table.getClass().getSimpleName());
-//            if (!keyword.equals("")) {
-//                query.setParameter("keyword", "%" + keyword + "%");
-//            }
+            Query query = session.createQuery(hql+" ORDER BY 1");
             objectList = query.list();
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,7 +94,7 @@ public class GeneralDAO<T> implements IGeneralDAO<T> {
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            String hql = "FROM " + t.getClass().getSimpleName() + " WHERE id = :a";
+            String hql = "FROM " + t.getClass().getSimpleName() + " WHERE id = :a" + "ORDER BY 1";
             Query query = session.createQuery(hql);
             query.setParameter("a", id);
             location = (T) query.uniqueResult();
