@@ -5,7 +5,14 @@
  */
 package views;
 
+import controllers.EmployeeController;
+import daos.GeneralDAO;
+import icontrollers.IEmployeeController;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Employee;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 /**
  *
@@ -13,12 +20,25 @@ import javax.swing.JOptionPane;
  */
 public class JSignIn extends javax.swing.JFrame {
 
+    DefaultTableModel model = new DefaultTableModel();
+    SessionFactory factory = HibernateUtil.getSessionFactory();
+    
+    GeneralDAO<Employee> dAO = new GeneralDAO<>(factory, Employee.class);
+    IEmployeeController idc = new EmployeeController(factory);
+    
     /**
      * Creates new form JLogin
      */
     public JSignIn() {
         initComponents();
+        getEmployee();
     }
+    
+    private void getEmployee(){
+     
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,28 +90,27 @@ public class JSignIn extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(158, 158, 158))
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
+                .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGap(111, 111, 111)
+                        .addComponent(jLabel1)
+                        .addGap(94, 94, 94))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(btnLogin)
-                                .addGap(44, 44, 44)
-                                .addComponent(jButton1))
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(64, Short.MAX_VALUE))
+                            .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(84, 84, 84)
+                        .addComponent(btnLogin)
+                        .addGap(44, 44, 44)
+                        .addComponent(jButton1)))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +126,7 @@ public class JSignIn extends javax.swing.JFrame {
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnLogin)
                     .addComponent(jButton1))
                 .addContainerGap(41, Short.MAX_VALUE))
@@ -121,8 +140,9 @@ public class JSignIn extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong");
         } else {
             JOptionPane.showMessageDialog(null, "Login Sukses");
+            new MainFrame().show();
         }
-        new MainFrame().show();
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
@@ -131,7 +151,8 @@ public class JSignIn extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        new JSignUp().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -62,10 +62,6 @@ public class EmployeeController implements IEmployeeController {
         }
         return result;
     }
-//        if (gdao.saveOrDelete(new Employee(id, firstName, lastName, email, phoneNumber, new java.sql.Date(date.getTime()), new BigDecimal(salary), new BigDecimal(commissionPct), new Department(Short.parseShort(department)), new Employee(Integer.parseInt(manager)), new Job(job)) {
-//            return "Data berhasil ditambahkan";
-//        }else{
-//            return result
-//        }    
+
 
 }
