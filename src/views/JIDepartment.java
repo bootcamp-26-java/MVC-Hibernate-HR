@@ -392,7 +392,8 @@ public class JIDepartment extends javax.swing.JInternalFrame {
 //        btnInsertDepartment.setEnabled(false);
         txtDepartment_Id.setText(model.getValueAt(SelectRowIndex, 1).toString());
         txtDepartment_Name.setText(model.getValueAt(SelectRowIndex, 2).toString());
-        cmbManager.setSelectedItem(""+model.getValueAt(SelectRowIndex, 3).toString());
+
+//        cmbManager.setSelectedItem(model.getValueAt(SelectRowIndex, 3).toString());
 //        cmbLocation.setSelectedItem(model.getValueAt(SelectRowIndex, 4).toString());
     }//GEN-LAST:event_tableDepartmentMouseClicked
 
@@ -419,9 +420,6 @@ public class JIDepartment extends javax.swing.JInternalFrame {
                 resetTextDepartment();
             }
         }
-
-//        int confirm = JOptionPane.showConfirmDialog(this, "Kamu yakin mau menyimpan data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
     }//GEN-LAST:event_btnInsertDepartmentActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
